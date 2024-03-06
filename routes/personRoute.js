@@ -22,7 +22,7 @@ route.post("/", async (req, res) => {
 
 // get method
 
-route.get("", async (req, res) => {
+route.get("/", async (req, res) => {
   try {
     let data = await menuModel.find();
     res.status(200).json(data);
