@@ -11,10 +11,11 @@ const PORT = process.env.PORT || 4000;
 // Middleware Function
 const logRequest = (req, res, next) => {
   console.log(
-    `[${new Date().toLocaleString()}] Request Made to : ${req.originalUrl}`
+    `[${new Date().toLocaleString()}] Request Made to :  ${req.originalUrl}`
   );
-  next(); // Move on to the next phase
+  next();
 };
+
 app.use(logRequest);
 
 // app.use(passport.initialize());
