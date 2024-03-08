@@ -2,15 +2,11 @@ const express = require("express");
 const app = express();
 const db = require("./dataBase");
 require("dotenv").config();
-
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
+const passport = require("./auth");
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.json()); // req.body
 const PORT = process.env.PORT || 4000;
-
-const personModel = require("./Schema/personSchema");
 
 // Middleware Function
 const logRequest = (req, res, next) => {
@@ -21,28 +17,6 @@ const logRequest = (req, res, next) => {
 };
 
 app.use(logRequest);
-
-// Passport middleware
-passport.use(
-  new LocalStrategy(async (username, password, done) => {
-    try {
-      console.log("Received credentials : ", username, password);
-      const user = await personModel.findOne({ username });
-      if (!user) {
-        return done(null, false, { message: "Incorrect username" });
-      }
-
-      const isPasswordMatch = user.password === password;
-      if (isPasswordMatch) {
-        return done(null, user);
-      } else {
-        return done(null, false, { message: "Incorrect Password" });
-      }
-    } catch (error) {
-      return done(error);
-    }
-  })
-);
 
 app.use(passport.initialize());
 
