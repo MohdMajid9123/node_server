@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const db = require("./dataBase");
 require("dotenv").config();
+
+//import passport.js file
+
 const passport = require("./auth");
 
 const bodyParser = require("body-parser");
@@ -23,7 +26,7 @@ app.use(passport.initialize());
 const localAuthMiddleware = passport.authenticate("local", { session: false });
 
 // Protected route requiring authentication
-app.get("/", (req, res) => {
+app.get("/", localAuthMiddleware, (req, res) => {
   res.send("Welcome to our Hotel");
 });
 

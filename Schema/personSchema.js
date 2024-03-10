@@ -1,43 +1,35 @@
 const mongoose = require("mongoose");
-
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
   },
-  age: {
-    type: Number, // Assuming age should be a number
-    required: true,
-  },
+  age: Number, // Age is optional
   work: {
     type: String,
-    enum: ["waiter", "chef", "manager"],
+    enum: ["chef", "waiter", "manager"],
     required: true,
   },
-  mobile_num: {
-    type: String, // Use String if you're including country codes or special characters
+  mobile: {
+    type: String,
     required: true,
-    unique: true, // Corrected typo
   },
   email: {
     type: String,
     required: true,
-    unique: true, // Corrected typo
+    unique: true,
   },
-  address: {
-    type: String,
-    required: true,
-  },
+  address: String, // Address is optional
   username: {
-    type: String,
     required: true,
+    type: String,
   },
   password: {
-    type: String,
     required: true,
+    type: String,
   },
 });
 
-const personModel = mongoose.model("Person", personSchema);
-
-module.exports = personModel;
+// Create Person model
+const PersonModel = mongoose.model("person", personSchema);
+module.exports = PersonModel;
