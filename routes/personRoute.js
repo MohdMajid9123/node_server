@@ -37,8 +37,8 @@ route.get("/", async (req, res) => {
 route.get("/:id", async (req, res) => {
   try {
     let Id = req.params.id;
-    if (Id === "manager" || Id === "chef" || Id === "waiter") {
-      let data = await menuModel.find({ work: Id });
+    if (Id === "username") {
+      let data = await menuModel.find({ username: Id });
       res.status(200).json(data);
     } else {
       res.status(404).json({ message: " worker name not found" });
