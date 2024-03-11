@@ -17,9 +17,19 @@ route.post("/signup", async (req, res) => {
     const menuData = new menuModel(data);
     const saveData = await menuData.save();
 
+    // create payload
+    const payload = {
+      id: saveData.id,
+      username: saveData.username,
+    };
+
+    // if you want to print payload then
+
+    console.log(JSON.stringify(payload));
+
     // token save and send
 
-    const token = generateToken(saveData.username);
+    const token = generateToken(payload);
     console.log("Token is : ", token);
 
     // send to the database
