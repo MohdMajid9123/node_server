@@ -26,7 +26,7 @@ app.use(passport.initialize());
 const localAuthMiddleware = passport.authenticate("local", { session: false });
 
 // Protected route requiring authentication
-app.get("/", localAuthMiddleware, (req, res) => {
+app.get("/", (req, res) => {
   res.send("Welcome to our Hotel");
 });
 
@@ -36,7 +36,7 @@ const menuItemRoutes = require("./routes/menuRoute");
 
 // Use the routers
 
-app.use("/person", localAuthMiddleware, personRoutes);
+app.use("/person", personRoutes);
 app.use("/menu", menuItemRoutes);
 
 app.listen(PORT, () => {

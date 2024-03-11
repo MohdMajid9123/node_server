@@ -2,18 +2,28 @@ const express = require("express");
 
 const route = express.Router();
 
+//import jwt.js
+
+const { jwtAutMiddleWare, generateToken } = require("./../jwt");
+
 // import menuModel
 const menuModel = require("./../Schema/personSchema");
 
 // post method in node js
 
-route.post("/", async (req, res) => {
+route.post("/signup", async (req, res) => {
   try {
     const data = req.body;
     const menuData = new menuModel(data);
     const saveData = await menuData.save();
 
-    res.status(200).json(saveData);
+    // token save and send
+
+    const token = generateToken(saveData.username);
+    console.log("Token is : ", token);
+
+    // send to the database
+    res.status(200).json({ saveData: saveData, token: token });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "internal server error" });
@@ -37,8 +47,8 @@ route.get("/", async (req, res) => {
 route.get("/:id", async (req, res) => {
   try {
     let Id = req.params.id;
-    if (Id === "username") {
-      let data = await menuModel.find({ username: Id });
+    if (Id === "chef" || Id === "waiter" || Id === "manager") {
+      let data = await menuModel.find({ work: Id });
       res.status(200).json(data);
     } else {
       res.status(404).json({ message: " worker name not found" });
