@@ -71,8 +71,8 @@ route.post("/login", async (req, res) => {
 });
 
 // get method
-
-route.get("/", async (req, res) => {
+// add jwtAutMiddleWare
+route.get("/", jwtAutMiddleWare, async (req, res) => {
   try {
     let data = await personModel.find();
     res.status(200).json(data);
