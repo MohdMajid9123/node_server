@@ -82,6 +82,23 @@ route.get("/", jwtAutMiddleWare, async (req, res) => {
   }
 });
 
+// create user profile
+
+route.get("/profile", jwtAutMiddleWare, async (req, res) => {
+  try {
+    const userData = req.user;
+    console.log("User Data : ", userData);
+
+    const userId = userData.id;
+    const user = await personModel.findById(userId);
+
+    res.status(200).json({ user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "internal server error" });
+  }
+});
+
 // search by id or name of data
 
 route.get("/:id", async (req, res) => {
