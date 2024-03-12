@@ -6,15 +6,15 @@ const route = express.Router();
 
 const { jwtAutMiddleWare, generateToken } = require("./../jwt");
 
-// import menuModel
-const menuModel = require("./../Schema/personSchema");
+// import personModel
+const personModel = require("./../Schema/personSchema");
 
 // post method in node js
 
 route.post("/signup", async (req, res) => {
   try {
     const data = req.body;
-    const menuData = new menuModel(data);
+    const menuData = new personModel(data);
     const saveData = await menuData.save();
 
     // create payload
@@ -40,11 +40,41 @@ route.post("/signup", async (req, res) => {
   }
 });
 
+//Login Route
+route.post("/login", async (req, res) => {
+  try {
+    // Extract username and password from request body
+    const { username, password } = req.body;
+
+    // find the user by username
+    const user = await personModel.findOne({ username: username });
+
+    // if user does not exist or password does not match , return error
+    if (!user || !(await user.comparePassword(password))) {
+      return res.status(401).json({ error: "invalid username or password" });
+    }
+
+    // generate Token
+
+    const payload = {
+      id: user.id,
+      username: user.username,
+    };
+
+    const token = generateToken(payload);
+
+    res.status(200).json({ token });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "internal error" });
+  }
+});
+
 // get method
 
 route.get("/", async (req, res) => {
   try {
-    let data = await menuModel.find();
+    let data = await personModel.find();
     res.status(200).json(data);
   } catch (error) {
     console.log(error);
@@ -58,7 +88,7 @@ route.get("/:id", async (req, res) => {
   try {
     let Id = req.params.id;
     if (Id === "chef" || Id === "waiter" || Id === "manager") {
-      let data = await menuModel.find({ work: Id });
+      let data = await personModel.find({ work: Id });
       res.status(200).json(data);
     } else {
       res.status(404).json({ message: " worker name not found" });
@@ -74,7 +104,7 @@ route.put("/:id", async (req, res) => {
     let menuId = req.params.id;
     let menuBody = req.body;
 
-    const data = await menuModel.findByIdAndUpdate(menuId, menuBody, {
+    const data = await personModel.findByIdAndUpdate(menuId, menuBody, {
       new: true,
       runValidators: true,
     });
@@ -94,7 +124,7 @@ route.delete("/:id", async (req, res) => {
   try {
     let menuId = req.params.id;
 
-    const data = await menuModel.findByIdAndDelete(menuId);
+    const data = await personModel.findByIdAndDelete(menuId);
     if (!data) {
       return res.status(404).json({ error: "menuId not found" });
     }
